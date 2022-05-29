@@ -27,5 +27,4 @@ export const authAPI = {
     registerUser(credentials: IUserCreate) {
         return instance.post(`login`, credentials);
     },
-    // logout
 };
