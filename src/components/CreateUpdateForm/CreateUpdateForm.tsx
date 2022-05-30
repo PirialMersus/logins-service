@@ -83,6 +83,8 @@ const CharacteristicForm: React.FC<PropType> = ({form, handleTextFiledChange, ha
                                 aria-label="toggle password visibility"
                                 onMouseDown={() => setIsPasswordVisible(true)}
                                 onMouseUp={() => setIsPasswordVisible(false)}
+                                onTouchStart={() => setIsPasswordVisible(true)}
+                                onTouchEnd={() => setIsPasswordVisible(false)}
                             ><VisibilityIcon/></IconButton>
                         )
                     }}

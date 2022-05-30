@@ -114,6 +114,8 @@ const Form: React.FC<IProps> = ({isRegisterComponent = false, handleFormSubmit})
                                     aria-label="toggle password visibility"
                                     onMouseDown={() => setIsPasswordVisible(true)}
                                     onMouseUp={() => setIsPasswordVisible(false)}
+                                    onTouchStart={() => setIsPasswordVisible(true)}
+                                    onTouchEnd={() => setIsPasswordVisible(false)}
                                 ><VisibilityIcon/></IconButton>
                             )
                         }}
@@ -142,7 +144,9 @@ const Form: React.FC<IProps> = ({isRegisterComponent = false, handleFormSubmit})
                                     <IconButton
                                         aria-label="toggle password visibility"
                                         onMouseDown={() => setIsConfirmPasswordVisible(true)}
+                                        onTouchStart={() => setIsConfirmPasswordVisible(true)}
                                         onMouseUp={() => setIsConfirmPasswordVisible(false)}
+                                        onTouchEnd={() => setIsConfirmPasswordVisible(false)}
                                     ><VisibilityIcon/></IconButton>
                                 )
                             }}

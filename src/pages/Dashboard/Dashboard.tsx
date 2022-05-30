@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     },
     tableContainer: {
         overflow: 'visible',
-        '@media (max-width:500px)': {
+        ['@media (max-width:550px)']: {
             overflowX: 'auto',
         },
     },
