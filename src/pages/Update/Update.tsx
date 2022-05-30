@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: '10px',
-        ['@media (max-width:350px)']: {
+        '@media (max-width:350px)': {
             flexWrap: 'wrap',
             justifyContent: 'center',
         },

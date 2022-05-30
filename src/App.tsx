@@ -20,31 +20,31 @@ const useStyles = makeStyles((theme) => ({
     appTitle: {
         justifyContent: 'center',
         fontSize: '36px !important',
-        ['@media (max-width:750px)']: {
+        '@media (max-width:750px)': {
             fontSize: '28px !important',
         },
-        ['@media (max-width:500px)']: {
+        '@media (max-width:500px)': {
             fontSize: '20px !important',
         },
     },
     greetings: {
         justifyContent: 'center',
         fontSize: '26px !important',
-        ['@media (max-width:750px)']: {
+        '@media (max-width:750px)': {
             fontSize: '20px !important',
         },
-        ['@media (max-width:500px)']: {
+        '@media (max-width:500px)': {
             fontSize: '14px !important',
         },
     },
     iconPlanet: {
         color: '#3f51b5',
         marginRight: '14px',
-        ['@media (max-width:750px)']: {
+        '@media (max-width:750px)': {
             fontSize: '22px !important',
             marginRight: '10px',
         },
-        ['@media (max-width:500px)']: {
+        '@media (max-width:500px)': {
             fontSize: '16px !important',
             marginRight: '6px',
         },
@@ -66,7 +66,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<AuthRedirect token={token}><Dashboard token={token}/></AuthRedirect>}/>
                 <Route path="/login" element={<Login setToken={setToken} token={token}/>}/>
-                <Route path="/preferences" element={<AuthRedirect token={token}><Settings/></AuthRedirect>}/>
+                <Route path="/settings" element={<Settings/>}/>
                 <Route path="/register" element={<Register/>}/>
                 <Route path="/create" element={<AuthRedirect token={token}><Create token={token}/></AuthRedirect>}/>
                 <Route path="/update/:passwordId"

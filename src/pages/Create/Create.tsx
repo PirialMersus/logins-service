@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: '10px',
-        ['@media (max-width:350px)']: {
+        '@media (max-width:350px)': {
             flexWrap: 'wrap',
             justifyContent: 'center',
         },
@@ -35,6 +35,9 @@ const useStyles = makeStyles((theme) => ({
     },
     button: {
         whiteSpace: 'nowrap',
+        '@media (max-width:500px)': {
+            whiteSpace: 'normal',
+        },
     },
     divider: {
         margin: '14px 0',
@@ -55,7 +58,7 @@ const Create: React.FC<IProps> = ({token}) => {
     const classes = useStyles();
     const navigate = useNavigate()
 
-    const {form, handleTextFiledChange, clear} = useForm<IForm>({
+    const {form, handleTextFiledChange} = useForm<IForm>({
         service: '',
         name: '',
         password: '',

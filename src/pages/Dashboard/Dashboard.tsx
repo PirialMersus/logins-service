@@ -8,10 +8,11 @@ import {makeStyles} from '@material-ui/core/styles';
 import Table, {ColumnType, IPassword} from '../../components/Table/ChangedMUITable';
 import ErrorLabel from '../../components/ErrorLabel/ErrorLabel';
 import {ListItemProps} from "../../components/ActionTools/ActionTools";
-import {errorToastMessage} from '../../helpers/toastMessageHelper';
+import {errorToastMessage, successToastMessage} from '../../helpers/toastMessageHelper';
 import Spinner from '../../components/Spinner/Spinner';
 import {IUserLogin} from "../../hooks/useToken/useToken";
 import {passwordsAPI} from "../../api";
+import ModalComponent from "../../components/ModalComponent/ModalComponent";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -23,9 +24,9 @@ const useStyles = makeStyles((theme) => ({
     },
     tableContainer: {
         overflow: 'visible',
-        ['@media (max-width:550px)']: {
-            overflowX: 'auto',
-        },
+        // '@media (max-width:550px)': {
+        //     overflowX: 'auto',
+        // },
     },
     tools: {
         display: 'flex',
@@ -69,11 +70,16 @@ const columns: ColumnType<IPassword>[] = [
     },
 ];
 
-interface IProps {
-    token: IUserLogin
+interface IDeletedPassword {
+    name: string | undefined;
+    id: string;
 }
 
 type IUpOrDownAction = 'up' | 'down' | null
+
+interface IProps {
+    token: IUserLogin
+}
 
 const modifyData = (data: IPassword[], upOrDownAction: IUpOrDownAction, id: string | null): IPassword[] => {
     const modifiedData = data.map(el => ({...el}))
@@ -90,6 +96,9 @@ const Dashboard: React.FC<IProps> = ({token}): JSX.Element => {
 
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<boolean>(false);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+    const [deletedPassword, setDeletedPassword] = useState<IDeletedPassword>({} as IDeletedPassword);
 
 
     const [passwordCellMouseClickObject, setPasswordCellMouseClickObject] = useState<{
@@ -98,24 +107,28 @@ const Dashboard: React.FC<IProps> = ({token}): JSX.Element => {
     const [data, setData] = useState<IPassword[]>([]);
     const [modifiedData, setModifiedData] = useState<IPassword[]>([]);
 
+    const fetchData = () => {
+        setLoading(true)
+        passwordsAPI.getPasswords(token.id)
+            .then(data => {
+                const passwords: IPassword[] = data.data.passwords
+                setData(passwords)
+                setModifiedData(modifyData(passwords, null, null))
+            })
+            .catch(error => {
+                errorToastMessage(error.message)
+                setError(true)
+            })
+            .finally(() => setLoading(false))
+    }
+
     useEffect(() => {
         setModifiedData(modifyData(data, passwordCellMouseClickObject.upOrDown, passwordCellMouseClickObject.value))
     }, [passwordCellMouseClickObject.upOrDown])
 
     useEffect(() => {
         if (token.id) {
-            setLoading(true)
-            passwordsAPI.getPasswords(token.id)
-                .then(data => {
-                    const passwords: IPassword[] = data.data.passwords
-                    setData(passwords)
-                    setModifiedData(modifyData(passwords, null, null))
-                })
-                .catch(error => {
-                    errorToastMessage(error.message)
-                    setError(true)
-                })
-                .finally(() => setLoading(false))
+            fetchData()
         }
     }, [token.id])
 
@@ -123,21 +136,36 @@ const Dashboard: React.FC<IProps> = ({token}): JSX.Element => {
         setPasswordCellMouseClickObject({upOrDown: upOrDownAction, value})
     }
 
+    const handleConfirmDelete = () => {
+        passwordsAPI.deletePassword(deletedPassword.id, token.id)
+            .then(
+                () => {
+                    successToastMessage(`Password ${deletedPassword.name} deleted!`);
+                },
+                (err) => errorToastMessage(err.response?.data?.message || err.message)
+            )
+            .then(() => {
+                setIsModalOpen(false);
+                fetchData()
+            });
+    };
+    const handleCancelDelete = () => setIsModalOpen(false);
+
     const tools: ListItemProps[] = [
         {
             name: 'Edit',
             icon: <EditIcon/>,
             onClick: (id: string) => {
                 navigate(`/update/:passwordId`.replace(':passwordId', id), {replace: true})
-                // history.push(Routes.ROLES_UPDATE.replace(':id', id));
             },
         },
         {
             name: 'Delete',
             icon: <DeleteIcon/>,
             onClick: (id: string) => {
-                // setSelectedRoleId(id);
-                // openModal();
+                const deletedPassword = data.find((password) => password.id === id);
+                setDeletedPassword({id, name: deletedPassword?.name});
+                setIsModalOpen(true);
             },
         },
     ];
@@ -161,6 +189,13 @@ const Dashboard: React.FC<IProps> = ({token}): JSX.Element => {
                                       onPasswordCellMouseAction={onPasswordCellMouseAction}/>
                 )}
             </TableContainer>
+            <ModalComponent
+                description="Delete password?"
+                question={`"${deletedPassword.name}"`}
+                open={isModalOpen}
+                cancelAction={handleCancelDelete}
+                confirmAction={handleConfirmDelete}
+            />
         </Paper>
     );
 };

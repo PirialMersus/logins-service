@@ -1,7 +1,10 @@
 import React from 'react';
+import Title from "../../components/Title/Title";
 
 export default function Settings() {
     return(
-        <h2>Settings</h2>
+        <Title color={'textPrimary'}>
+            Settings
+        </Title>
     );
 }

@@ -10,6 +10,8 @@ import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import {TextField} from '../TextField/TextField';
+import IconButton from "@material-ui/core/IconButton";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -48,6 +50,8 @@ const Form: React.FC<IProps> = ({isRegisterComponent = false, handleFormSubmit})
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [confirmPasswordError, setConfirmPasswordError] = useState<boolean>(false);
+    const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
+    const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState<boolean>(false);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -101,9 +105,18 @@ const Form: React.FC<IProps> = ({isRegisterComponent = false, handleFormSubmit})
                         fullWidth
                         name="password"
                         label="Password"
-                        type="password"
+                        type={isPasswordVisible ? 'text' : 'password'}
                         autoComplete="off"
                         inputProps={{maxLength: 50, minLength: 5}}
+                        InputProps={{
+                            endAdornment: (
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onMouseDown={() => setIsPasswordVisible(true)}
+                                    onMouseUp={() => setIsPasswordVisible(false)}
+                                ><VisibilityIcon/></IconButton>
+                            )
+                        }}
                         // error={fields.password.error}
                         // aria-errormessage={'message'}
                         value={password}
@@ -117,13 +130,22 @@ const Form: React.FC<IProps> = ({isRegisterComponent = false, handleFormSubmit})
                             fullWidth
                             name="password"
                             label="Confirm password"
-                            type="password"
                             autoComplete="off"
                             error={confirmPasswordError}
                             aria-errormessage={'enter correct value'}
                             value={confirmPassword}
                             inputProps={{maxLength: 50, minLength: 5}}
                             onChange={e => setConfirmPassword(e.target.value)}
+                            type={isConfirmPasswordVisible ? 'text' : 'password'}
+                            InputProps={{
+                                endAdornment: (
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onMouseDown={() => setIsConfirmPasswordVisible(true)}
+                                        onMouseUp={() => setIsConfirmPasswordVisible(false)}
+                                    ><VisibilityIcon/></IconButton>
+                                )
+                            }}
                         />
                     }
                     <Button type="submit" fullWidth variant="contained" color="primary"
