@@ -89,7 +89,7 @@ const ModalComponent: React.FC<ModalProps> = ({
 
 ModalComponent.defaultProps = {
     confirmBtnText: 'Ok',
-    cancelBtnText: 'Escape',
+    cancelBtnText: 'Cancel',
 };
 
 export default ModalComponent;
